@@ -1,24 +1,27 @@
-import logo from './logo.svg';
+import React from 'react';
+import { PrivyProvider } from '@privy-io/react-auth';
+import WalletExportApp from './components/WalletExportApp';
 import './App.css';
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <PrivyProvider
+      appId={process.env.REACT_APP_PRIVY_APP_ID || "cm77yp83t04ei11q2fm2uec9y"}
+      config={{
+        appearance: {
+          theme: 'light',
+          accentColor: '#FF6B35',
+          logo: 'https://primape.app/logo.png'
+        },
+        embeddedWallets: {
+          createOnLogin: 'users-without-wallets',
+          requireUserPasswordOnCreate: false
+        },
+        loginMethods: ['email', 'sms', 'google', 'twitter']
+      }}
+    >
+      <WalletExportApp />
+    </PrivyProvider>
   );
 }
 

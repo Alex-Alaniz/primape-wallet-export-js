@@ -1,70 +1,153 @@
-# Getting Started with Create React App
+# PRIMAPE Wallet Export App
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+A React-based web application for exporting cryptocurrency wallets with PRIMAPE branding and Privy authentication.
 
-## Available Scripts
+## Features
 
-In the project directory, you can run:
+- 🔐 **Privy Authentication**: Secure login with email, SMS, Google, and Twitter
+- 💼 **Multi-Chain Support**: Export wallets for Ethereum and Solana
+- 🎨 **PRIMAPE Branding**: Custom styling with PRIMAPE colors and logo
+- 📱 **Mobile Optimized**: PWA-ready with responsive design
+- 🚀 **Modern UI**: Clean, professional interface with black background
 
-### `npm start`
+## Tech Stack
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+- **React 19** - Frontend framework
+- **Privy** - Authentication and wallet management
+- **Solana Web3.js** - Solana blockchain integration
+- **React Icons** - Icon library
+- **Lucide React** - Additional icons
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+## Getting Started
 
-### `npm test`
+### Prerequisites
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+- Node.js (v16 or higher)
+- npm or yarn
+- Privy App ID
 
-### `npm run build`
+### Installation
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+1. Clone the repository:
+```bash
+git clone <repository-url>
+cd primape-wallet-export-js
+```
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+2. Install dependencies:
+```bash
+npm install --legacy-peer-deps
+```
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+3. Set up environment variables:
+```bash
+cp .env.example .env.local
+```
 
-### `npm run eject`
+4. Add your Privy App ID to `.env.local`:
+```
+REACT_APP_PRIVY_APP_ID=your_privy_app_id_here
+```
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+5. Start the development server:
+```bash
+npm start
+```
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+The app will be available at `http://localhost:3000`.
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+### Building for Production
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+```bash
+npm run build
+```
 
-## Learn More
+This creates a `build` folder with optimized production files.
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+## Deployment
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+### Vercel (Recommended)
 
-### Code Splitting
+1. Install Vercel CLI:
+```bash
+npm i -g vercel
+```
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+2. Deploy:
+```bash
+vercel
+```
 
-### Analyzing the Bundle Size
+3. Set environment variables in Vercel dashboard:
+   - `REACT_APP_PRIVY_APP_ID`: Your Privy App ID
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+### Manual Deployment
 
-### Making a Progressive Web App
+1. Build the project:
+```bash
+npm run build
+```
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
+2. Serve the build folder with any static file server:
+```bash
+npx serve -s build
+```
 
-### Advanced Configuration
+## Environment Variables
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
+| Variable | Description | Required |
+|----------|-------------|----------|
+| `REACT_APP_PRIVY_APP_ID` | Privy App ID for authentication | Yes |
 
-### Deployment
+## Project Structure
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
+```
+src/
+├── components/
+│   ├── WalletExportApp.js    # Main application component
+│   └── WalletExportApp.css   # Component styles
+├── App.js                    # App wrapper with Privy provider
+├── App.css                   # Global styles
+└── index.js                  # Entry point
+```
 
-### `npm run build` fails to minify
+## Features Overview
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+### Authentication
+- Multiple login methods (email, SMS, Google, Twitter)
+- Secure wallet creation and management
+- User profile display with social media integration
+
+### Wallet Export
+- **Ethereum Wallets**: Export private keys and seed phrases
+- **Solana Wallets**: Export private keys and seed phrases
+- Secure key generation and display
+
+### UI/UX
+- PRIMAPE brand colors (#FF6B35 accent, #000000 background)
+- Responsive design for mobile and desktop
+- Professional loading states and error handling
+- Twitter integration with proper icon display
+
+## Security Notes
+
+- Private keys are generated client-side
+- No sensitive data is stored on servers
+- All wallet operations are performed locally
+- Users are responsible for securing their exported keys
+
+## Contributing
+
+1. Fork the repository
+2. Create a feature branch
+3. Make your changes
+4. Test thoroughly
+5. Submit a pull request
+
+## License
+
+This project is private and proprietary to PRIMAPE.
+
+## Support
+
+For support or questions, please contact the PRIMAPE development team.
