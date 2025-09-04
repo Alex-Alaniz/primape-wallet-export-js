@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { usePrivy, useLinkAccount, type WalletWithMetadata } from '@privy-io/react-auth';
 import { UserPill } from '@privy-io/react-auth/ui';
 import { useSolanaWallets } from '@privy-io/react-auth/solana';
+import { createClient } from '@supabase/supabase-js';
 import { 
   Mail, 
   Phone, 
@@ -17,6 +18,11 @@ import {
 } from 'lucide-react';
 import './WalletExportApp.css';
 import primapeLogo from '../assets/primape/asset7.png';
+
+// Supabase configuration
+const supabaseUrl = 'https://sarwumhfyglncxucvsio.supabase.co';
+const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNhcnd1bWhmeWdsbmN4dWN2c2lvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTYyMjg3NTQsImV4cCI6MjA3MTgwNDc1NH0.gVDwhlelWf0OFTaRWtFBteC97e0_JJJ2KLI9Yt1Zv-E';
+const supabase = createClient(supabaseUrl, supabaseKey);
 
 const WalletExportApp = () => {
   const { 
@@ -38,6 +44,7 @@ const WalletExportApp = () => {
   const [loading, setLoading] = useState(true);
   const [message, setMessage] = useState('');
   const [exportingWallet, setExportingWallet] = useState(null);
+  const [userProfile, setUserProfile] = useState(null);
   
   // Add global error boundary for uncaught errors
   useEffect(() => {
@@ -92,6 +99,60 @@ const WalletExportApp = () => {
   useEffect(() => {
     setLoading(false);
   }, []);
+
+  // Fetch user profile from Supabase when authenticated
+  useEffect(() => {
+    const fetchUserProfile = async () => {
+      if (authenticated && user?.id) {
+        try {
+          console.log('Fetching user profile for Privy ID:', user.id);
+          
+          // First try to find by privy_id
+          let { data: profile, error } = await supabase
+            .from('users')
+            .select('*')
+            .eq('privy_id', user.id)
+            .maybeSingle();
+          
+          // If not found by privy_id, try by bio field (legacy)
+          if (!profile) {
+            const { data: bioProfile } = await supabase
+              .from('users')
+              .select('*')
+              .eq('bio', `Privy ID: ${user.id}`)
+              .maybeSingle();
+            
+            profile = bioProfile;
+          }
+          
+          // If we have a Twitter account linked, try to find by Twitter username
+          if (!profile) {
+            const twitterAccount = user?.linkedAccounts?.find(acc => acc.type === 'twitter');
+            if (twitterAccount?.username) {
+              const { data: twitterProfile } = await supabase
+                .from('users')
+                .select('*')
+                .eq('twitter_username', twitterAccount.username)
+                .maybeSingle();
+              
+              profile = twitterProfile;
+            }
+          }
+          
+          if (profile) {
+            console.log('Found user profile:', profile);
+            setUserProfile(profile);
+          } else {
+            console.log('No user profile found in database');
+          }
+        } catch (error) {
+          console.error('Error fetching user profile:', error);
+        }
+      }
+    };
+
+    fetchUserProfile();
+  }, [authenticated, user]);
 
   if (loading) {
     return (
@@ -316,8 +377,29 @@ const WalletExportApp = () => {
       <div className="status success">
         <p>✅ Connected to PRIMAPE Account</p>
         <div className="user-info">
-          {(() => {
-            // Find the primary account for display
+          {userProfile ? (
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 12 }}>
+              {userProfile.avatar_url && (
+                <img 
+                  src={userProfile.avatar_url} 
+                  alt={userProfile.username} 
+                  style={{ 
+                    width: 32, 
+                    height: 32, 
+                    borderRadius: '50%',
+                    objectFit: 'cover'
+                  }}
+                />
+              )}
+              <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start' }}>
+                <span style={{ fontWeight: 600, fontSize: 16 }}>{userProfile.username}</span>
+                {userProfile.level && (
+                  <span style={{ fontSize: 12, color: '#666' }}>Level {userProfile.level} • {userProfile.total_predictions} predictions</span>
+                )}
+              </div>
+            </div>
+          ) : (() => {
+            // Fallback to linked accounts if no profile found
             const emailAccount = user?.linkedAccounts?.find(acc => acc.type === 'email');
             const phoneAccount = user?.linkedAccounts?.find(acc => acc.type === 'phone');
             const googleAccount = user?.linkedAccounts?.find(acc => acc.type === 'google');
@@ -342,7 +424,7 @@ const WalletExportApp = () => {
             } else if (phoneAccount) {
               return `User: ${phoneAccount.number}`;
             } else {
-              return `User ID: ${user?.id?.slice(0, 8)}...`;
+              return `Welcome!`;
             }
           })()}
         </div>

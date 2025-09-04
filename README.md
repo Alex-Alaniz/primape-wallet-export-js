@@ -9,12 +9,16 @@ A React-based web application for exporting cryptocurrency wallets with PRIMAPE 
 - 🎨 **PRIMAPE Branding**: Custom styling with PRIMAPE colors and logo
 - 📱 **Mobile Optimized**: PWA-ready with responsive design
 - 🚀 **Modern UI**: Clean, professional interface with black background
+- 👤 **User Profile Display**: Shows actual username and avatar from iOS app
+- 📊 **User Stats**: Displays level and prediction count from PRIMAPE database
+- 🔄 **Auto-sync**: Automatically fetches user data from Supabase
 
 ## Tech Stack
 
 - **React 19** - Frontend framework
 - **Privy** - Authentication and wallet management
 - **Solana Web3.js** - Solana blockchain integration
+- **Supabase** - User profile data from PRIMAPE iOS app
 - **React Icons** - Icon library
 - **Lucide React** - Additional icons
 
